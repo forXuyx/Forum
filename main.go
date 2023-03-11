@@ -2,6 +2,11 @@ package main
 
 import (
 	"context"
+	"ezTikTok/dao/mysql"
+	"ezTikTok/dao/redis"
+	"ezTikTok/logger"
+	"ezTikTok/routes"
+	"ezTikTok/settings"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,11 +14,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"web_app/dao/mysql"
-	"web_app/dao/redis"
-	"web_app/logger"
-	"web_app/routes"
-	"web_app/settings"
 
 	"go.uber.org/zap"
 )

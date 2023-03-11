@@ -1,8 +1,8 @@
 package redis
 
 import (
+	"ezTikTok/settings"
 	"fmt"
-	"web_app/settings"
 
 	"github.com/go-redis/redis"
 )

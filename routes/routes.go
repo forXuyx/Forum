@@ -1,9 +1,9 @@
 package routes
 
 import (
+	"ezTikTok/logger"
+	"ezTikTok/settings"
 	"net/http"
-	"web_app/logger"
-	"web_app/settings"
 
 	"github.com/gin-gonic/gin"
 )

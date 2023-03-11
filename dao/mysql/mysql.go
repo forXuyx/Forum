@@ -1,8 +1,8 @@
 package mysql
 
 import (
+	"ezTikTok/settings"
 	"fmt"
-	"web_app/settings"
 
 	"go.uber.org/zap"
 
