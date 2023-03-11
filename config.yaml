@@ -1,7 +1,9 @@
 name: "ezTikTok"
 mode: "dev"
-port: 8080
-version: "v0.1.0"
+port: 8181
+version: "v0.1.1"
+start_time: "2023-03-11"
+machine_id: "1"
 log:
   level: "debug"
   filename: "ezTikTok.log"
