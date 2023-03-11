@@ -1,0 +1,26 @@
+package logic
+
+import (
+	"ezTikTok/dao/mysql"
+	"ezTikTok/models"
+	"ezTikTok/pkg/snowflake"
+)
+
+func SignUp(p *models.ParamSignUp) (err error) {
+	// 判断用户存不存在
+	if err = mysql.CheckUserExist(p.Username); err != nil {
+		return err
+	}
+	// 生成UID
+	userID := snowflake.GetID()
+	// 构造一个user实例
+	user := &models.User{
+		UserID:   userID,
+		Username: p.Username,
+		Password: p.Password,
+		Phone:    p.Phone,
+		Email:    p.Email,
+	}
+	// 保存到数据库
+	return mysql.InsertUser(user)
+}
