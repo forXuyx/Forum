@@ -6,6 +6,7 @@ import (
 	"ezTikTok/pkg/snowflake"
 )
 
+// SignUp 处理注册业务逻辑
 func SignUp(p *models.ParamSignUp) (err error) {
 	// 判断用户存不存在
 	if err = mysql.CheckUserExist(p.Username); err != nil {
@@ -23,4 +24,14 @@ func SignUp(p *models.ParamSignUp) (err error) {
 	}
 	// 保存到数据库
 	return mysql.InsertUser(user)
+}
+
+// Login 处理登录业务逻辑
+func Login(p *models.ParamLogin) error {
+	// 直接登录
+	user := &models.User{
+		Username: p.Username,
+		Password: p.Password,
+	}
+	return mysql.Login(user)
 }
