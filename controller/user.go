@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"errors"
+	"ezTikTok/dao/mysql"
 	"ezTikTok/logic"
 	"ezTikTok/models"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 // SignupHandler 注册请求
@@ -20,28 +20,23 @@ func SignupHandler(c *gin.Context) {
 		// 判断err是不是validator.ValidationErrors类型
 		err, ok := err.(validator.ValidationErrors)
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": err.Error(),
-			})
+			ResponseError(c, CodeInvalidParam)
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"msg": removeTopStruct(err.Translate(trans)),
-		})
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(err.Translate(trans)))
 		return
 	}
-	fmt.Println(p)
 	// 2.业务处理
 	if err := logic.SignUp(p); err != nil {
 		zap.L().Error("logic.SignUp failed", zap.Error(err))
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "注册失败",
-		})
+		if errors.Is(err, mysql.ErrorUserExist) {
+			ResponseError(c, CodeUserExist)
+			return
+		}
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 	// 3.返回响应
-	c.JSON(http.StatusOK, gin.H{
-		"msg": "注册成功",
-	})
+	ResponseSuccess(c, nil)
 }
 
 // LoginHandler 登录请求
@@ -54,26 +49,17 @@ func LoginHandler(c *gin.Context) {
 		// 判断err是不是validator.ValidationErrors类型
 		err, ok := err.(validator.ValidationErrors)
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": err.Error(),
-			})
+			ResponseError(c, CodeInvalidParam)
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"msg": removeTopStruct(err.Translate(trans)),
-		})
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(err.Translate(trans)))
 		return
 	}
-	fmt.Println(p)
 	// 2.业务处理
 	if err := logic.Login(p); err != nil {
 		zap.L().Error("logic.Login failed", zap.String("username", p.Username), zap.Error(err))
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "用户名或密码错误",
-		})
+		ResponseError(c, CodeInvalidPassword)
 		return
 	}
 	// 3.返回响应
-	c.JSON(http.StatusOK, gin.H{
-		"msg": "登录成功",
-	})
+	ResponseSuccess(c, nil)
 }

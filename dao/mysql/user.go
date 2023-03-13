@@ -9,6 +9,11 @@ import (
 
 const secret = "hais"
 
+var (
+	ErrorUserExist       = errors.New("用户已存在")
+	ErrorInvalidPassword = errors.New("用户名或密码错误")
+)
+
 // 注册业务
 // CheckUserExist 检查用户名是否存在
 func CheckUserExist(username string) (err error) {
@@ -18,7 +23,7 @@ func CheckUserExist(username string) (err error) {
 		return err
 	}
 	if count > 0 {
-		return errors.New("用户已存在")
+		return ErrorUserExist
 	}
 	return
 }
@@ -51,7 +56,7 @@ func Login(user *models.User) (err error) {
 	// 查询密码是否正确
 	password := encryptPassword(oPassword)
 	if password != user.Password {
-		return errors.New("用户名或密码错误")
+		return ErrorInvalidPassword
 	}
 	return
 }
