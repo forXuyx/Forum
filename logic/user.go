@@ -3,6 +3,7 @@ package logic
 import (
 	"ezTikTok/dao/mysql"
 	"ezTikTok/models"
+	"ezTikTok/pkg/jwt"
 	"ezTikTok/pkg/snowflake"
 )
 
@@ -27,11 +28,14 @@ func SignUp(p *models.ParamSignUp) (err error) {
 }
 
 // Login 处理登录业务逻辑
-func Login(p *models.ParamLogin) error {
+func Login(p *models.ParamLogin) (token string, err error) {
 	// 直接登录
 	user := &models.User{
 		Username: p.Username,
 		Password: p.Password,
 	}
-	return mysql.Login(user)
+	if err := mysql.Login(user); err != nil {
+		return "", err
+	}
+	return jwt.GenToken(user.UserID, user.Username)
 }
