@@ -26,7 +26,7 @@ func Setup(mode string) *gin.Engine {
 
 	//  测试jwt验证中间件
 	v1.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
+		c.String(http.StatusOK, "ok")
 	})
 
 	v1.GET("/version", func(c *gin.Context) {
