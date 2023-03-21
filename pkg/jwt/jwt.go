@@ -12,7 +12,7 @@ type CustomClaims struct {
 	jwt.RegisteredClaims        // 内嵌标准的声明
 }
 
-const TokenExpireDuration = time.Hour * 24
+const TokenExpireDuration = time.Minute * 10
 
 var CustomSecret = []byte("柠檬鱼")
 

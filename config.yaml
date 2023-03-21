@@ -1,6 +1,6 @@
 name: "ezTikTok"
 mode: "dev"
-port: 8181
+port: 8081
 version: "v0.1.2"
 start_time: "2023-03-11"
 machine_id: "1"

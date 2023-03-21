@@ -16,18 +16,20 @@ func Setup(mode string) *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
+	v1 := r.Group("/api/v1")
+
 	// 注册业务路由
-	r.POST("/signup", controller.SignupHandler)
+	v1.POST("/signup", controller.SignupHandler)
 
 	// 登录业务路由
-	r.POST("/login", controller.LoginHandler)
+	v1.POST("/login", controller.LoginHandler)
 
 	//  测试jwt验证中间件
-	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
+	v1.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
 
-	r.GET("/version", func(c *gin.Context) {
+	v1.GET("/version", func(c *gin.Context) {
 		c.String(http.StatusOK, settings.Conf.Version)
 	})
 
