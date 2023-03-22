@@ -3,6 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/spf13/viper"
 	"time"
 )
 
@@ -11,8 +12,6 @@ type CustomClaims struct {
 	Username             string `json:"username"`
 	jwt.RegisteredClaims        // 内嵌标准的声明
 }
-
-const TokenExpireDuration = time.Minute * 10
 
 var CustomSecret = []byte("柠檬鱼")
 
@@ -23,8 +22,10 @@ func GenToken(userID int64, username string) (string, error) {
 		userID,
 		username,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)),
-			Issuer:    "blog",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(
+				time.Duration(viper.GetInt("auth. jwt_expir")) * time.Hour),
+			),
+			Issuer: "blog",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

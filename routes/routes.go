@@ -4,7 +4,6 @@ import (
 	"ezTikTok/controller"
 	"ezTikTok/logger"
 	"ezTikTok/middlewares"
-	"ezTikTok/settings"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -20,18 +19,13 @@ func Setup(mode string) *gin.Engine {
 
 	// 注册业务路由
 	v1.POST("/signup", controller.SignupHandler)
-
 	// 登录业务路由
 	v1.POST("/login", controller.LoginHandler)
 
-	//  测试jwt验证中间件
-	v1.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
-		c.String(http.StatusOK, "ok")
-	})
-
-	v1.GET("/version", func(c *gin.Context) {
-		c.String(http.StatusOK, settings.Conf.Version)
-	})
+	v1.Use(middlewares.JWTAuthMiddleware()) // 应用中间件
+	{
+		v1.GET("/community", controller.CommunityHandler)
+	}
 
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
