@@ -6,4 +6,5 @@ type User struct {
 	Password string `db:"password"`
 	Phone    string `db:"phone"`
 	Email    string `db:"email"`
+	Token    string
 }
