@@ -3,16 +3,10 @@ package mysql
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"errors"
 	"ezTikTok/models"
 )
 
 const secret = "hais"
-
-var (
-	ErrorUserExist       = errors.New("用户已存在")
-	ErrorInvalidPassword = errors.New("用户名或密码错误")
-)
 
 // 注册业务
 // CheckUserExist 检查用户名是否存在
