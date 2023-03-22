@@ -24,10 +24,16 @@ func Setup(mode string) *gin.Engine {
 
 	v1.Use(middlewares.JWTAuthMiddleware()) // 应用中间件
 	{
+		// 获取社区列表
 		v1.GET("/community", controller.CommunityHandler)
+		// 获取社区详情
 		v1.GET("community/:id", controller.CommunityDetailHandler)
+		// 创建帖子
 		v1.POST("/post", controller.CreatePostHandler)
+		// 获取帖子详情
 		v1.GET("/post/:id", controller.GetPostDetailHandler)
+		// 获取帖子列表
+		v1.GET("/posts/", controller.GetPostListHandler)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
