@@ -6,8 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+	"strconv"
 )
 
+// CreatePostHandler 创建帖子
 func CreatePostHandler(c *gin.Context) {
 	// 1.参数校验
 	p := new(models.Post)
@@ -36,4 +38,24 @@ func CreatePostHandler(c *gin.Context) {
 	}
 	// 3.返回响应
 	ResponseSuccess(c, nil)
+}
+
+// GetPostDetailHandler 获取社区详情
+func GetPostDetailHandler(c *gin.Context) {
+	// 获取帖子id
+	idStr := c.Param("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		zap.L().Error("get post with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	// 查询该帖子
+	data, err := logic.GetPostDetailByID(id)
+	if err != nil {
+		zap.L().Error("logic.GetPostDetail failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
 }

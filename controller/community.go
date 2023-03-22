@@ -25,10 +25,11 @@ func CommunityDetailHandler(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		zap.L().Error("get community detail with invalid param", zap.Error(err))
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	// 查询到所有社区（community_id, community_name）以列表形式返回
+	// 查询帖子详情
 	data, err := logic.CommunityDetail(id)
 	if err != nil {
 		zap.L().Error("logic.CommunityDetail failed", zap.Error(err))
