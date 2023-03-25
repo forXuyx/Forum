@@ -22,6 +22,17 @@ func PostVoteHandler(c *gin.Context) {
 		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(err.Translate(trans)))
 		return
 	}
-	logic.PostVote()
+	// 获取当前用户id
+	userID, err := GetCurrentUser(c)
+	if err != nil {
+		ResponseError(c, CodeNeedLogin)
+		return
+	}
+	// 具体投票逻辑
+	if err := logic.PostVote(userID, p); err != nil {
+		zap.L().Error("logic.PostVote failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
 	ResponseSuccess(c, nil)
 }
