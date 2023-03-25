@@ -17,7 +17,7 @@ func CreatePost(p *models.Post) (err error) {
 	if err != nil {
 		return err
 	}
-	err = redis.CreatePost(p.ID)
+	err = redis.CreatePost(p.ID, p.CommunityID)
 	return
 }
 
@@ -81,6 +81,52 @@ func GetPostList(page, size int64) (data []*models.ApiPostDetail, err error) {
 // GetPostList2 升级版获取接口
 func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err error) {
 	ids, err := redis.GetPostIDsInOrder(p)
+	if err != nil {
+		return
+	}
+	// 判空
+	if len(ids) == 0 {
+		zap.L().Warn("redis.GetPostIDsInOrder(p) return 0 data")
+		return
+	}
+	// 根据id查询mysql
+	postList, err := mysql.GetPostListByIDs(ids)
+	if err != nil {
+		return
+	}
+	// 提取查询好每篇帖子投票数
+	voteData, err := redis.GetPostVoteData(ids)
+	if err != nil {
+		return
+	}
+	// 从list中取出post
+	for idx, post := range postList {
+		// 根据id查询作者
+		user, err := mysql.GetUserByID(post.AuthorID)
+		if err != nil {
+			zap.L().Error("mysql.GetUserByID failed", zap.Error(err))
+			continue
+		}
+		// 根据社区id查询社区详情
+		community, err := mysql.GetCommunityDetailByID(post.CommunityID)
+		if err != nil {
+			zap.L().Error("mysql.GetCommunityDetailByID failed", zap.Error(err))
+			continue
+		}
+		postDetail := &models.ApiPostDetail{
+			AuthorName:      user.Username,
+			VoteNum:         voteData[idx],
+			Post:            post,
+			CommunityDetail: community,
+		}
+		data = append(data, postDetail)
+	}
+	return
+}
+
+// GetCommunityPostListHandler 获取具体社区列表
+func GetCommunityPostListHandler(p *models.ParamCommunityPostList) (data []*models.ApiPostDetail, err error) {
+	ids, err := redis.GetCommunityPostIDsInOrder(p)
 	if err != nil {
 		return
 	}

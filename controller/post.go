@@ -95,3 +95,29 @@ func GetPostListHandler2(c *gin.Context) {
 	}
 	ResponseSuccess(c, data)
 }
+
+// GetCommunityPostListHandler 根据社区查询帖子列表
+func GetCommunityPostListHandler(c *gin.Context) {
+	p := &models.ParamCommunityPostList{
+		ParamPostList: &models.ParamPostList{
+			Page:  1,
+			Size:  10,
+			Order: models.OrderTime,
+		},
+	}
+
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("GetCommunityPostListHandler with invalid params", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	// 查询到所有帖子
+	data, err := logic.GetCommunityPostListHandler(p)
+	if err != nil {
+		zap.L().Error("logic.GetPostList failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}

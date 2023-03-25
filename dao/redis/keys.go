@@ -5,6 +5,7 @@ const (
 	KeyPostTimeZSet    = "post:time"
 	KeyPostScoreZSet   = "post:score"
 	KeyPostVotedZsetPF = "post:voted:"
+	KeyCommunitySetPF  = "community:"
 )
 
 // 给key加上前缀
