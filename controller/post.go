@@ -9,7 +9,17 @@ import (
 	"strconv"
 )
 
-// CreatePostHandler 创建帖子
+// CreatePostHandler 创建帖子接口
+// @Summary 创建帖子接口
+// @Description 用于创建帖子的接口
+// @Tags 帖子相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param object query models.Post false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _CreatePost
+// @Router /post [post]
 func CreatePostHandler(c *gin.Context) {
 	// 1.参数校验
 	p := new(models.Post)
@@ -40,7 +50,17 @@ func CreatePostHandler(c *gin.Context) {
 	ResponseSuccess(c, nil)
 }
 
-// GetPostDetailHandler 获取社区详情
+// GetPostDetailHandler 获取帖子详情接口
+// @Summary 获取帖子详情接口
+// @Description 用于获取帖子详情的接口
+// @Tags 帖子相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param object query models.ApiPostDetail false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _GetPostDetail
+// @Router /post/:id [get]
 func GetPostDetailHandler(c *gin.Context) {
 	// 获取帖子id
 	idStr := c.Param("id")
@@ -60,7 +80,17 @@ func GetPostDetailHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
-// GetPostListHandler 获取帖子列表
+// GetPostListHandler 获取帖子列表接口
+// @Summary 获取帖子列表接口
+// @Description 普通获取帖子列表接口
+// @Tags 帖子相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param object query models.ParamPostList false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponsePostList
+// @Router /posts [get]
 func GetPostListHandler(c *gin.Context) {
 	page, size := GetPageInfo(c)
 	// 查询到所有帖子
@@ -74,6 +104,16 @@ func GetPostListHandler(c *gin.Context) {
 }
 
 // GetPostListHandler2 升级版帖子列表接口
+// @Summary 升级版帖子列表接口
+// @Description 可按社区按时间或分数排序查询帖子列表接口
+// @Tags 帖子相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param object query models.ParamPostList false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponsePostList
+// @Router /posts2 [get]
 func GetPostListHandler2(c *gin.Context) {
 	p := &models.ParamPostList{
 		Page:  1,

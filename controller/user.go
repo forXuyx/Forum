@@ -11,7 +11,16 @@ import (
 	"go.uber.org/zap"
 )
 
-// SignupHandler 注册请求
+// SignupHandler 注册请求接口
+// @Summary 注册请求接口
+// @Description 用于注册的接口
+// @Tags 用户相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param object query models.ParamSignUp false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _SignUp
+// @Router /signup [post]
 func SignupHandler(c *gin.Context) {
 	// 1.参数校验和参数校验
 	p := new(models.ParamSignUp)
@@ -40,7 +49,16 @@ func SignupHandler(c *gin.Context) {
 	ResponseSuccess(c, nil)
 }
 
-// LoginHandler 登录请求
+// LoginHandler 登录请求接口
+// @Summary 登录请求接口
+// @Description 用于登录的接口
+// @Tags 用户相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param object query models.ParamLogin false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _Login
+// @Router /login [post]
 func LoginHandler(c *gin.Context) {
 	// 1.参数校验和参数校验
 	p := new(models.ParamLogin)

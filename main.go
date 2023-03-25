@@ -20,7 +20,20 @@ import (
 	"go.uber.org/zap"
 )
 
-// Go Web开发较通用的脚手架模板
+// @title Blog
+// @version 0.1.0
+// @description 博客论坛
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Lemon
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host 127.0.0.1
+// @BasePath root
 
 func main() {
 	// 1. 加载配置
