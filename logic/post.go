@@ -84,6 +84,7 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 	if err != nil {
 		return
 	}
+	// 判空
 	if len(ids) == 0 {
 		zap.L().Warn("redis.GetPostIDsInOrder(p) return 0 data")
 		return
@@ -93,8 +94,13 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 	if err != nil {
 		return
 	}
-
-	for _, post := range postList {
+	// 提取查询好每篇帖子投票数
+	voteData, err := redis.GetPostVoteData(ids)
+	if err != nil {
+		return
+	}
+	// 从list中取出post
+	for idx, post := range postList {
 		// 根据id查询作者
 		user, err := mysql.GetUserByID(post.AuthorID)
 		if err != nil {
@@ -109,6 +115,7 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 		}
 		postDetail := &models.ApiPostDetail{
 			AuthorName:      user.Username,
+			VoteNum:         voteData[idx],
 			Post:            post,
 			CommunityDetail: community,
 		}
