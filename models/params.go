@@ -16,3 +16,9 @@ type ParamLogin struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
+// ParamVote 投票结构体
+type ParamVote struct {
+	PostID    string `json:"post_id" binding:"required"`
+	Direction int8   `json:"direction,string" binding:"required,oneof=1 0 -1"`
+}
