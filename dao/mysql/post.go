@@ -3,7 +3,9 @@ package mysql
 import (
 	"database/sql"
 	"ezTikTok/models"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
+	"strings"
 )
 
 // CreatePost 插入用户到数据库
@@ -30,7 +32,9 @@ func GetPostDetailByID(id int64) (post *models.Post, err error) {
 func GetPostList(page, size int64) (postList []*models.Post, err error) {
 	sqlStr := `select 
     post_id, title, content, author_id, community_id, create_time 
-	from  post 
+	from  post
+	ORDER BY create_time
+	DESC 
 	limit ?,?`
 	postList = make([]*models.Post, 0, 4)
 	err = db.Select(&postList, sqlStr, (page-1)*size, size)
@@ -39,5 +43,22 @@ func GetPostList(page, size int64) (postList []*models.Post, err error) {
 		err = nil
 		return
 	}
+	return
+}
+
+// GetPostListByIDs 根据给定的id列表查询帖子
+func GetPostListByIDs(ids []string) (postList []*models.Post, err error) {
+	sqlStr := `select 
+    post_id, title, content, author_id, community_id, create_time 
+	from  post
+	where post_id in (?)
+	order by FIND_IN_SET(post_id, ?)
+	`
+	query, args, err := sqlx.In(sqlStr, ids, strings.Join(ids, ","))
+	if err != nil {
+		return nil, err
+	}
+	query = db.Rebind(query)
+	err = db.Select(&postList, query, args...)
 	return
 }
