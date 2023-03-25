@@ -2,6 +2,7 @@ package logic
 
 import (
 	"ezTikTok/dao/mysql"
+	"ezTikTok/dao/redis"
 	"ezTikTok/models"
 	"ezTikTok/pkg/snowflake"
 	"go.uber.org/zap"
@@ -10,19 +11,14 @@ import (
 // CreatePost 创建帖子
 func CreatePost(p *models.Post) (err error) {
 	// 生成UID
-	postID := snowflake.GetID()
-	// 构造一个user实例
-	post := &models.Post{
-		ID:          postID,
-		AuthorID:    p.AuthorID,
-		CommunityID: p.CommunityID,
-		Status:      p.Status,
-		Title:       p.Title,
-		Content:     p.Content,
-		CreateTime:  p.CreateTime,
-	}
+	p.ID = snowflake.GetID()
 	// 保存到数据库
-	return mysql.CreatePost(post)
+	err = mysql.CreatePost(p)
+	if err != nil {
+		return err
+	}
+	err = redis.CreatePost(p.ID)
+	return
 }
 
 // GetPostDetailByID 获取帖子详情

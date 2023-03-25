@@ -20,5 +20,5 @@ type ParamLogin struct {
 // ParamVote 投票结构体
 type ParamVote struct {
 	PostID    string `json:"post_id" binding:"required"`
-	Direction int8   `json:"direction,string" binding:"required,oneof=1 0 -1"`
+	Direction int8   `json:"direction,string" binding:"oneof=1 0 -1"`
 }
